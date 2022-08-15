@@ -1,7 +1,4 @@
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
+import javassist.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
@@ -26,7 +23,8 @@ public class Transformer implements ClassFileTransformer {
         if(wantedClassNameJVM.equals(className)){
             try{
                 ClassPool pool = ClassPool.getDefault();
-                pool.appendClassPath(new LoaderClassPath(classBeingRedefined.getClassLoader()));
+                ClassPath path = new LoaderClassPath(classBeingRedefined.getClassLoader());
+                pool.appendClassPath(path);
                 CtClass clazz = pool.get(wantedClassName);
                 CtMethod method = clazz.getDeclaredMethod(wantedMethod);
                 method.insertBefore(Transformer.code);

