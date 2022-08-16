@@ -16,9 +16,9 @@ public class AgentShellMain {
         System.out.println(path);
         File file = new File(path);
         if (file.isFile()){
-            String pid = AgentShellMain.getTomcatPid();
+            String pid = AgentShellMain.getTomcatPid2();
             if(pid == null){
-                pid = AgentShellMain.getTomcatPid2();
+                pid = AgentShellMain.getTomcatPid();
             }
             if (pid != null){
                 VirtualMachine vm = VirtualMachine.attach(pid);

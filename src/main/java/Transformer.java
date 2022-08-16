@@ -18,7 +18,7 @@ public class Transformer implements ClassFileTransformer {
     @Override
     public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         String wantedClassName = "org.apache.catalina.core.ApplicationFilterChain";
-        String wantedMethod = "doFilter";
+        String wantedMethod = "internalDoFilter";
         String wantedClassNameJVM = wantedClassName.replace(".","/");
         if(wantedClassNameJVM.equals(className)){
             try{
